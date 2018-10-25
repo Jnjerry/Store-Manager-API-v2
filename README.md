@@ -1,1 +1,1 @@
-# Store-Manager-API-v3
+# Store-Manager-API-v2
