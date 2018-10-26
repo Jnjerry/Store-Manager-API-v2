@@ -1,11 +1,10 @@
 #contains variables specific to our application
-
+import os
 class Config(object):
     "parent configuration class"
     DEBUG= False
     CSRF_ENABLED = True
     SECRET_KEY=os.getenv("SECRET_KEY","funguo")
-    DATABASE_URL=os.getenv("DATABASE_URL")
 
 
 class DevelopmentConfig(Config):
@@ -35,4 +34,6 @@ app_config = {
     'testing': TestingConfig,
     'staging': StagingConfig,
     'production': ProductionConfig,
+    'database_url':"dbname='store_manager_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
+    'test_url':"dbname='store_test_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
 }

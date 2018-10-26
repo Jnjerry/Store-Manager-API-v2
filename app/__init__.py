@@ -1,9 +1,13 @@
-from flask import Flask
+from flask import Flask,Blueprint
 
-from instance.config import app_config
-db=Database()
+from app.api.db.db_con import create_tables
+
 
 def create_app(config_name):
+    create_tables()
     app=Flask(__name__)
-    app.config.from_object(app_config[config_name])
+    app.config["SECRET_KEY"] = 'joanN'
+    from .api.v2 import version2 as v2
+    app.register_blueprint(v2)
+
     return app
