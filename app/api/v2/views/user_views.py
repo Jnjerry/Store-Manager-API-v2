@@ -25,7 +25,7 @@ class UserSignUp(Resource):
 		password = args['password'].strip()
 
 		if User.exists(data):
-			return make_response(jsonify({'message': 'user with email already exists'}), 409)
+			return make_response(jsonify({'message': 'user with email already exists'}), 400)
 		else:
 			query=User.create(data)
 			con = db_connect()
@@ -35,3 +35,19 @@ class UserSignUp(Resource):
 			con.commit()
 
 			return make_response(jsonify({'message': 'user created successfully'}), 201)
+
+class UserLogin(Resource):
+	def post(self):
+		data = request.get_json()
+		args = parser.parse_args()
+		name = args['name'].strip()
+		email = args['email'].strip()
+		password = args['password'].strip()
+		user_exists=User.exists(data)
+
+
+		if not user_exists:
+			return make_response(jsonify({'message': 'email does not exist'}), 400)
+		else:
+			"""create a token after user logs in"""
+			return make_response(jsonify({'message':'successful login'}))
