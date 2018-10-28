@@ -11,15 +11,13 @@ parser.add_argument('price', type=int , required=True, help="price cannot be emp
 parser.add_argument('quantity', type=int ,required=True, help="quantity has to be n integer")
 
 
-class Products(Resource):
+class Product_List(Resource):
 	def get(self):
 		product=Product.get_all(self)
 		if not product:
 			return {"message":"No products yet"},400
 		return make_response(jsonify(
 			{"message":"All products in the system","users":product,"status":"okay"}),200)
-
-
 
 
 	def post(self):
@@ -42,3 +40,15 @@ class Products(Resource):
 			con.commit()
 
 			return make_response(jsonify({'message': 'product created successfully'}), 201)
+
+
+
+class Products(Resource):
+
+		"""get product by id"""
+		def get(self, product_id=None):			
+				product=Product.get_by_id(product_id)
+				if not product :
+					return make_response(jsonify({'error': 'product not found'}), 404)
+				else:
+					return make_response(jsonify({'product': product}), 200)

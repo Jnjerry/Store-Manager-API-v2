@@ -16,3 +16,13 @@ class Product(object):
 		cur=con.cursor()
 		cur.execute(query)
 		return cur.fetchall()
+
+	@staticmethod
+	def get_by_id(product_id):
+		if product_id:
+			query = "SELECT * FROM products WHERE product_id = '%s';" % product_id
+			con=db_connect()
+			cur=con.cursor()
+			cur.execute(query)
+			return cur.fetchone()
+		return False
