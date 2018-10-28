@@ -1,5 +1,5 @@
 from app.api.db.db_con import db_connect
-
+import json
 class Product(object):
 	@staticmethod
 	def create_products(data):
@@ -26,3 +26,14 @@ class Product(object):
 			cur.execute(query)
 			return cur.fetchone()
 		return False
+
+	@staticmethod
+	def update(data,product_id):
+		query="UPDATE products SET name='%s',category='%s',description='%s',quantity='%s',price='%s' WHERE product_id='%s' " %(
+		data['name'], data['category'],json.dumps(data['description']),data['quantity'],data['price'],product_id)
+		return query
+
+	@staticmethod
+	def delete_by_id(product_id):
+			query = "DELETE  FROM products WHERE product_id = '%s';" % product_id
+			return query

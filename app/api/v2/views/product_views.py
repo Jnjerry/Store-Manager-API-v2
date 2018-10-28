@@ -39,16 +39,50 @@ class Product_List(Resource):
 			cur.close()
 			con.commit()
 
-			return make_response(jsonify({'message': 'product created successfully'}), 201)
+			return make_response(jsonify({'message': 'product updated successfully'}), 201)
 
 
 
 class Products(Resource):
 
 		"""get product by id"""
-		def get(self, product_id=None):			
+		def get(self, product_id=None):
 				product=Product.get_by_id(product_id)
 				if not product :
 					return make_response(jsonify({'error': 'product not found'}), 404)
 				else:
 					return make_response(jsonify({'product': product}), 200)
+		def put(self,product_id):
+			data = request.get_json()
+
+			args = parser.parse_args()
+			name = args['name'].strip()
+			category = args['category'].strip()
+			description = args['description'].strip()
+			price = args['price']
+			quantity = args['quantity']
+
+			if quantity<0:
+				return {'message': 'quantity cannot be 0'}, 400
+			else:
+
+				query=Product.update(data,product_id)
+				con = db_connect()
+				cur = con.cursor()
+				cur.execute(query)
+				cur.close()
+				con.commit()
+
+				return make_response(jsonify({'message': 'product updated successfully'}), 201)
+
+		def delete(self,product_id=None):
+			if Product.get_by_id(product_id) != None:				
+				query=Product.delete_by_id(product_id)
+				con = db_connect()
+				cur = con.cursor()
+				cur.execute(query)
+				cur.close()
+				con.commit()
+				return make_response(jsonify({"message": "product deleted successfully"}), 200)
+			else:
+				return make_response(jsonify({"message": "product not found"}), 404)
