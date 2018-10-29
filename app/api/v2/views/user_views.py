@@ -2,6 +2,7 @@ from flask import jsonify, make_response, request
 from flask_restful import Resource,reqparse
 from app.api.v2.models.user_models import User
 from app.api.db.db_con import db_connect
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_identity, get_raw_jwt)
 
 parser = reqparse.RequestParser()
@@ -25,6 +26,7 @@ class UserSignUp(Resource):
 		email = args['email'].strip()
 		roles = args['roles'].strip()
 		password = args['password'].lower().strip()
+		
 		role=["admin","attendant"]
 		if roles not in role:
 			return make_response(jsonify({'message': 'only admin and attendant roles are accepted'}), 400)

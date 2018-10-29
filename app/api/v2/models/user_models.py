@@ -1,11 +1,17 @@
 from app.api.db.db_con import db_connect
 from flask_jwt_extended import create_access_token,get_jwt_identity
-from werkzeug.security import check_password_hash
+from flask_bcrypt import Bcrypt
 from functools import wraps
 from flask import abort
 import datetime
 
 class User(object):
+    def __init__(self, email, password):
+        """Initialize the user with an email and a password."""
+        self.email = email
+        self.password = Bcrypt().generate_password_hash(password).decode()
+
+
     @staticmethod
     def create(data):
         query = "INSERT INTO users (name,email,password,roles)" \
@@ -41,5 +47,9 @@ class User(object):
         cur = con.cursor()
         cur.execute(query)
         return cur.fetchall()
-
-    
+    @staticmethod
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    @staticmethod
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
