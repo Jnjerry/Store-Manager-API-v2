@@ -1,5 +1,6 @@
 from app.api.db.db_con import db_connect
 import json
+import functools
 class Product(object):
 	@staticmethod
 	def create_products(data):

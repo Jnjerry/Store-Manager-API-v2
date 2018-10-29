@@ -1,11 +1,16 @@
 from app.api.db.db_con import db_connect
+from flask_jwt_extended import create_access_token,get_jwt_identity
+from werkzeug.security import check_password_hash
+from functools import wraps
+from flask import abort
+import datetime
 
 class User(object):
     @staticmethod
     def create(data):
-        query = "INSERT INTO users (name,email,password)" \
-                "VALUES('%s','%s', '%s')"% (
-                    data['name'],data['email'],data['password'])
+        query = "INSERT INTO users (name,email,password,roles)" \
+                "VALUES('%s','%s', '%s','%s')"% (
+                    data['name'],data['email'],data['password'],data['roles'])
         return query
 
     @staticmethod
@@ -36,3 +41,5 @@ class User(object):
         cur = con.cursor()
         cur.execute(query)
         return cur.fetchall()
+
+    
