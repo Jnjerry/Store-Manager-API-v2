@@ -16,7 +16,7 @@ parser.add_argument('quantity', type=int ,required=True, help="quantity has to b
 
 
 class Product_List(Resource):
-        @jwt_required
+
         def get(self):
             product=Product.get_all(self)
             if not product:
@@ -25,7 +25,6 @@ class Product_List(Resource):
                 {"message":"All products in the system","product":product,"status":"okay"}),200)
 
         @jwt_required
-        @admin_required
         def post(self):
             data = request.get_json()
             args = parser.parse_args()
