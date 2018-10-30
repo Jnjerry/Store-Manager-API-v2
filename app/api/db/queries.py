@@ -17,4 +17,5 @@ query2 = """CREATE TABLE IF NOT EXISTS users (
 
 
 
+
 queries= [query1,query2]

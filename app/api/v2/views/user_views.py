@@ -43,16 +43,16 @@ class UserSignUp(Resource):
 class UserLogin(Resource):
 	def post(self):
 		data = request.get_json()
-		args = parser.parse_args()
-		name = args['name'].strip()
-		email = args['email'].strip()
-		password = args['password'].strip()
-		user_exists=User.exists(args)
+		# args = parser.parse_args()
+		# name = args['name'].strip()
+		# email = args['email'].strip()
+		# password = args['password'].strip()
+		user_exists=User.exists(data)
 
 
 		if user_exists:
 			"""create a token after user logs in success"""
-			access_token = create_access_token(args['email'])
+			access_token = create_access_token(identity=json_data['email'])
 			return make_response(jsonify({'message': "successfully logged in", 'access_token': access_token}), 201)
 		else:
 			return make_response(jsonify({'message': 'email does not exist'}), 400)

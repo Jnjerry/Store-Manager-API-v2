@@ -24,7 +24,7 @@ class Product_List(Resource):
             return make_response(jsonify(
                 {"message":"All products in the system","product":product,"status":"okay"}),200)
 
-        @jwt_required
+        
         def post(self):
             data = request.get_json()
             args = parser.parse_args()
