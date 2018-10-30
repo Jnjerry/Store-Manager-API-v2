@@ -16,7 +16,21 @@ class Product(object):
 		con=db_connect()
 		cur=con.cursor()
 		cur.execute(query)
-		return cur.fetchall()
+		all_products=cur.fetchall()
+		if all_products:
+			prod_list=[]
+			for item in all_products:
+				my_item={
+					'product_id':item[0],
+					'name':item[1],
+					'category':item[2],
+					'description':item[3],
+					'quantity':item[4],
+					'price':item[5],
+
+				}
+				prod_list.append(my_item)
+		return prod_list
 
 	@staticmethod
 	def get_by_id(product_id):
