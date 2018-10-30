@@ -56,3 +56,11 @@ class UserLogin(Resource):
 			return make_response(jsonify({'message': "successfully logged in", 'access_token': access_token}), 201)
 		else:
 			return make_response(jsonify({'message': 'email does not exist'}), 400)
+
+
+
+
+
+
+
+		

@@ -14,7 +14,14 @@ query2 = """CREATE TABLE IF NOT EXISTS users (
         date_created timestamp with time zone DEFAULT ('now'::text)::date NOT NULL);
         """
 
-
+qeury3="""create table if not exists sales(
+    sale_id serial  NOT NULL primary key,
+    created_by integer  NOT NULL references users(id),
+    product varchar NOT NULL,
+    quantity integer NOT NULL,
+    price integer NOT NULL,
+    date_created timestamp with time zone DEFAULT ('now'::text)::date NOT NULL);
+    """
 
 
 

@@ -27,15 +27,20 @@ class ProductsTestCase(unittest.TestCase):
 			self.assertEqual(response.status_code,200)
 
 		def test_create_new_product(self):
-		        '''test admin can create a new product'''
-		        data = self.product_data
-		        response = self.client.post('/api/v2/products',
-		            data=json.dumps(data), headers=self.header)
+				'''test admin can create a new product'''
+				data = self.product_data
+				response = self.client.post('/api/v2/products',
+					data=json.dumps(data), headers=self.header)
 
-		        result = json.loads(response.data.decode())
+				result = json.loads(response.data.decode())
 
-		        self.assertEqual(response.status_code, 201)
-		        
+				self.assertEqual(response.status_code, 201)
+
+		def test_for_empty_data(self):
+			response = self.client.post('/api/v2/products', data={})
+			self.assertEqual(response.status_code, 422)
+			self.assertEqual(response.mimetype, 'application/json')
+
 
 		# def test_create_product(self):
 		# 	self.register_user()
