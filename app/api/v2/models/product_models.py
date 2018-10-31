@@ -52,3 +52,13 @@ class Product(object):
 	def delete_by_id(product_id):
 			query = "DELETE  FROM products WHERE product_id = '%s';" % product_id
 			return query
+
+
+	@staticmethod
+	def product_exists(product_id):
+			query="SELECT * FROM products WHERE product_id = '%s';" % product_id
+
+			con = db_connect()
+			cur = con.cursor()
+			cur.execute(query)
+			return cur.fetchone()

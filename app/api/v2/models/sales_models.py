@@ -1,18 +1,58 @@
-rom app.api.db.db_con import db_connect
+from app.api.db.db_con import db_connect
 from flask_jwt_extended import create_access_token,get_jwt_identity
 from flask import abort
 import datetime
 
-class Sales(object):
-
-	def __init__(self, email, password, roles):
-		self.email = email
-		self.password = password
-		self.roles = roles
+class Sale():
+	def __init__(self, product_id="", quantity="", remains="", price="", name="", date_created=""):
+		self.product_id = product_id
+		self.quantity = quantity
+		self.remains = remains
+		self.price = price
+		self.name = name
+		self.date_created = date_created
 
 	@staticmethod
-	def create(data):
-		query = "INSERT INTO users (name,email,password,roles)" \
-				"VALUES('%s','%s', '%s','%s')"% (
-					data['name'],data['email'],data['password'],data['roles'])
+	def create_sales(sales):
+		query = "INSERT INTO sales (product_id,quantity,remains,price,name,date_created)" \
+				"VALUES('%s','%s', '%s','%s','%s', now()"% (
+				data['product_id'],data['quantity'],data['remains'],data['price'],data['name'])
+		con=db_connect()
+		cur=con.cursor()
+		cur.execute(query)
 		return query
+
+
+
+	@staticmethod
+	def quantity_decrease(data,product_id):
+		query="UPDATE products SET quantity='%s' WHERE product_id='%s' " %(
+		data['quantity'],product_id)
+		return query
+
+
+
+
+	@staticmethod
+	def get_by_id(product_id):
+		if product_id:
+			query = "SELECT * FROM products WHERE product_id = '%s';" % product_id
+			con=db_connect()
+			cur=con.cursor()
+			cur.execute(query)
+			return cur.fetchone()
+		return False
+	# @staticmethod
+	# def get_sales():
+	# 	query="SELECT * FROM sales"
+	# 	con=db_connect()
+	# 	cur=con.cursor()
+	# 	cur.execute(query)
+	# 	all_sales=cur.fetchall()
+	#     rows = []
+	#     for row in sales:
+	#         rows.append(dict(row))
+	#     if rows is None:
+	#         return None
+	#     con.commit()
+		# return rows
