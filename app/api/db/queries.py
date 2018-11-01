@@ -13,8 +13,17 @@ query2 = """CREATE TABLE IF NOT EXISTS users (
         password varchar(300) NOT NULL,
         date_created timestamp with time zone DEFAULT ('now'::text)::date NOT NULL);
         """
-
-
+# CREATE TABLE IF NOT EXISTS sales(
+#         id serial PRIMARY KEY,
+#         product_id INT NOT NULL,
+#         quantity INT NOT NULL,
+#         remains INT NOT NULL,
+#         price numeric NOT NULL,
+#         name varchar,
+#         date_created TIMESTAMP,
+#         FOREIGN KEY (product_id) REFERENCES products(product_id)
+#         );
+#
 
 
 queries= [query1,query2]

@@ -1,6 +1,7 @@
 from flask_restful import Resource,reqparse
 from flask import jsonify, make_response, request
 from app.api.v2.models.product_models import Product
+from app.api.v2.models.sales_models import Sale
 from app.api.v2.validators.secure_endpoints import admin_required
 from flask_jwt_extended import jwt_required,get_jwt_claims
 from app.api.db.db_con import db_connect
@@ -16,7 +17,7 @@ parser.add_argument('quantity', type=int ,required=True, help="quantity has to b
 
 
 class Product_List(Resource):
-        @jwt_required
+
         def get(self):
             product=Product.get_all(self)
             if not product:
@@ -24,8 +25,7 @@ class Product_List(Resource):
             return make_response(jsonify(
                 {"message":"All products in the system","product":product,"status":"okay"}),200)
 
-        @jwt_required
-        @admin_required
+
         def post(self):
             data = request.get_json()
             args = parser.parse_args()
@@ -47,6 +47,29 @@ class Product_List(Resource):
                 con.commit()
 
                 return make_response(jsonify({'message': 'product created successfully'}), 201)
+
+        def post(self):
+            data = request.get_json()
+            args = parser.parse_args()
+            name = args['name'].strip()
+            category = args['category'].strip()
+            description = args['description'].strip()
+            price = args['price']
+            quantity = args['quantity']
+
+
+            if quantity<0:
+                return {'message': 'quantity cannot be 0'}, 400
+            else:
+                query=Product.create_products(data)
+                con = db_connect()
+                cur = con.cursor()
+                cur.execute(query)
+                cur.close()
+                con.commit()
+
+                return make_response(jsonify({'message': 'product created successfully'}), 201)
+
 
 
 
