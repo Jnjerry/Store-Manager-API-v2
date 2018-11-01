@@ -1,10 +1,4 @@
 from app.api.db.db_con import db_connect
-from werkzeug.security import generate_password_hash
-from psycopg2 import sql
-import psycopg2.extras
-
-
-
 
 class User(object):
     @staticmethod
