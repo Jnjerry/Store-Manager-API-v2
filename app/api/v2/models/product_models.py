@@ -34,13 +34,13 @@ class Product(object):
 
 	@staticmethod
 	def get_by_id(product_id):
-		if product_id:
 			query = "SELECT * FROM products WHERE product_id = '%s';" % product_id
 			con=db_connect()
 			cur=con.cursor()
 			cur.execute(query)
 			return cur.fetchone()
-		return False
+
+
 
 	@staticmethod
 	def update(data,product_id):
@@ -62,3 +62,9 @@ class Product(object):
 			cur = con.cursor()
 			cur.execute(query)
 			return cur.fetchone()
+
+	@staticmethod
+	def quantity_decrease(product_id,product):
+		query="UPDATE products SET quantity='%s' WHERE product_id='%s' " %(
+		product[5],product_id)
+		return query

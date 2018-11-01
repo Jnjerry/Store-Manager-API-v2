@@ -13,22 +13,20 @@ class Sale():
 		self.date_created = date_created
 
 	@staticmethod
-	def create_sales(sales):
+	def create_sales(data):
 		query = "INSERT INTO sales (product_id,quantity,remains,price,name,date_created)" \
-				"VALUES('%s','%s', '%s','%s','%s', now()"% (
-				data['product_id'],data['quantity'],data['remains'],data['price'],data['name'])
+				"VALUES('%s','%s', '%s','%s','%s', now())"% (
+				data['product_id'],data['quantity'],3,4,5)
 		con=db_connect()
 		cur=con.cursor()
 		cur.execute(query)
+		con.commit()
 		return query
 
 
 
-	@staticmethod
-	def quantity_decrease(data,product_id):
-		query="UPDATE products SET quantity='%s' WHERE product_id='%s' " %(
-		data['quantity'],product_id)
-		return query
+
+
 
 
 
