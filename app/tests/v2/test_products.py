@@ -1,86 +1,87 @@
+
 import unittest
 import json
-
-from app import create_app
+import os
+from ... import create_app
 
 
 class ProductsTestCase(unittest.TestCase):
-	def setUp(self):
-		self.client= create_app('testing').test_client()
+		def setUp(self):
+			self.client= create_app('testing').test_client()
+			self.product_data = {"product_id":5, "name":"Purple Hibiscus","category":"Africanah", "description": "Written by Chimamanda","price":1500,"quantity":20}
+			self.register_user = {'email': 'joo@gmail.com', 'name': 'joan', 'password': 'jj','roles':'admin'}
+			self.login_user={'email': 'joo@gmail.com','password': 'jj'}
 
-		self.product_data = {"name":"Americanah", "category":"African", "description":"Written by Chimamanda","price":"1500","quantity":"20"}
-		self.register = {'name':'tyy','email':'twigy@gail.com', 'password':'dsaf','roles':'admin'}
-		self.login= {'name':'tw','email':'"twigmail.com"', 'password':'dsaf'}
-		self.unwanted_data={"nam":"Americanah", "categoy":"African"}
-		self.header = {"Content-Type": "application/json"}
-		product_url = "/api/v2/products"
+		def register_user(self,email="", password="",roles="",name=""):
+			user_data = self.register_user
+			return self.client.post('/api/v2/auth/register', data=user_data)
 
+		def login_user(self, email="", password=""):
+			user_data =self.user
+			return self.client.post('/api/v2/auth/login', data=user_data)
 
-	def register_user(self,name='',email='',roles='',password=''):
-		user_data = json.dumps(self.register)
-		return self.client.post('/api/v2/auth/register', headers={'content_type':'application/json'}, data=user_data)
+		def test_create_product(self):
+			response = self.client.post(
+			'/api/v2/auth/login',
+			data = json.dumps(self.login_user),
+			content_type = 'application/json'
+			)
+			token = json.loads(response.data.decode())['access_token']
 
-	def login_user(self,name='',email='',password=''):
-		user_data = self.login
-		return self.client.post('/api/v2/auth/login',headers={'content_type':'application/json'},data=user_data)
-
-
-	def test_delete_product(self):
-		response = self.client.post('/api/v2/auth/login',data = json.dumps(self.login),
-		content_type = 'application/json'
-		)
-		response_data= json.loads(response.data.decode())['access_token']
-
-		response = self.client.delete('/api/v2/products/9',
-		headers=dict(Authorization="Bearer " + access_token)
-		)
-		self.assertEqual(response.status_code, 200)
-
-		# def test_Register_user(self):
-        # response = self.client.post(
-        # '/api/v2/users/login',
-        #  data = json.dumps(dict(
-        #     email='ken@gmail.com',password='12345')),
-        #  content_type = 'application/json')
-        # response_data = json.loads(response.data.decode())
-		#
-        # token = json.loads(response.data.decode())['access_token']
-		#
-        # response = self.client.post('/api/v2/auth/user',
-        # data = json.dumps(self.register_valid_email),
-        # headers=dict(Authorization="Bearer " + token),
-        # content_type = 'application/json')
-        # response_data = json.loads(response.data)
-        # self.assertEqual(response_data["message"],"Enter correct email format")
-        # self.assertEqual(response.status_code, 200)
-		#
-		#
-		# # response = self.client.get('/api/v2/products/1',
-		# headers=dict(Authorization="Bearer " + self.owner_token))
-		# response_data = json.loads(response.data)
-		# self.assertEqual("product not available",response_data["message"])
-		#
+			# #test product has been added
+			response = self.client.post(
+			'/api/v2/products',
+			data = json.dumps(self.product_data),
+			headers=dict(Authorization="Bearer " + token),
+			content_type = 'application/json')
+			response_data = json.loads(response.data)
+			self.assertEqual(response.status_code, 201)
 
 
+		def test_create_product(self):
+			response = self.client.post(
+			'/api/v2/auth/login',
+			data = json.dumps(self.login_user),
+			content_type = 'application/json'
+			)
+			token = json.loads(response.data.decode())['access_token']
 
+			# #test product has been added
+			response = self.client.post(
+			'/api/v2/products',
+			data = json.dumps(self.product_data),
+			headers=dict(Authorization="Bearer " + token),
+			content_type = 'application/json')
+			response_data = json.loads(response.data)
+			self.assertEqual(response.status_code, 201)
 
-	# def test_create_sale(self):
-	#         self.register_user()
-	#         result = self.login_user()
-	#         access_token = json.loads(result.data.decode())['access_token']
-	#
-	#
-	#         response = self.client.post('/api/v2/products',
-	#             data=json.dumps(self.product_data),
-	#             headers=dict(Authorization="Bearer " + access_token),
-	#             content_type='application/json'
-	#             )
-	#
-	#         self.assertEqual(response.status_code, 201)
+		def test_modify_product(self):
+			response = self.client.post(
+			'/api/v2/auth/login',
+			data = json.dumps(self.login_user),
+			content_type = 'application/json'
+			)
+			token = json.loads(response.data.decode())['access_token']
+			# check if updated item exists
+			response = self.client.put(
+			'/api/v2/products/8888',
+			headers=dict(Authorization="Bearer " + token),
+			data = json.dumps(self.product_data),
+			content_type = 'application/json')
 
+			response_data = json.loads(response.data)
+			self.assertEqual(response.status_code, 201)
 
+		def test_delete_product(self):
+			response = self.client.post(
+			'/api/v2/auth/login',
+			data = json.dumps(self.login_user),
+			content_type = 'application/json'
+			)
+			token = json.loads(response.data.decode())['access_token']
 
-
-
-if __name__=="__main__":
-	unittest.main()
+			response = self.client.delete(
+			'/api/v2/products/8',
+			headers=dict(Authorization="Bearer " + token)
+			)
+			self.assertEqual(response.status_code, 200)

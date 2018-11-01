@@ -8,7 +8,7 @@ class AuthTestCase(unittest.TestCase):
 	# method will run before each test case method
 	def setUp(self):
 		self.client= create_app('testing').test_client()
-		self.user = {'name':'joan','email':'joan@gmail.com', 'roles':'admin', 'password':'jojo'}
+		self.user = {'name':'joan','email':'ngugijoa@gmail.com', 'roles':'admin', 'password':'jj'}
 		self.user_empty = {'name':'joan','email':'joan@gmail.com', 'roles':'admin', 'password':''}
 
 	def register_user(self,name='',email='',roles='',password=''):
