@@ -25,7 +25,7 @@ class Product_List(Resource):
                 {"message":"All products in the system","product":product,"status":"okay"}),200)
 
         @jwt_required
-        @admin_required
+        @attendant_required
         def post(self):
             data = request.get_json()
             args = parser.parse_args()
@@ -59,7 +59,8 @@ class Products(Resource):
                     return make_response(jsonify({'error': 'product not found'}), 404)
                 else:
                     return make_response(jsonify({'product': product}), 200)
-        
+        @admin_required
+        @jwt_required
         def put(self,product_id):
             data = request.get_json()
 

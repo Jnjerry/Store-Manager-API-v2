@@ -23,10 +23,11 @@ class Sales(Resource):
 		"""posts a single product"""
 		data=request.get_json()
 		args = parser.parse_args()
-		product_id = args['product_id']
+		product_id =args['product_id']
 		quantity = args['quantity']
 
 		product =Product.get_by_id(product_id)
+		price=product[4]
 
 
 		if product is None:
@@ -35,23 +36,19 @@ class Sales(Resource):
 
 
 		remains = int(product[5]) - int(quantity)
-		print(product[5])
-		print(quantity)
 		price = int(product[4]) * int(quantity)
 		name = product[1]
 		date_created = datetime.now()
-		new_sale = Sale(product_id, quantity, remains, price, name, date_created)
+		if remains < 0:
+		   return {"message": "Not enough in stock"}
 
-		updated_product_list=list(product)
-		updated_product_list[5]= remains
+		newsale = Sale(product_id,quantity,remains,price,name,date_created).create_sales(self)
+		print(newsale)
+		Sale.decrease_quantity(product_id,product)
 
-		Product.quantity_decrease(product_id, product)
-		new_sale.create_sales(data)
 
 		return make_response(jsonify(
-			{"message":"Sale created",
-			"product":new_sale.__dict__}
-			), 201)
+			{"message":"Sale created",}), 201)
 
 	def get(self):
 		"""gets all products"""

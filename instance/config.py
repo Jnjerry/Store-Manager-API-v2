@@ -19,7 +19,7 @@ class TestingConfig(Config):
     TESTING = True
     DEBUG = True
     database_url="dbname='store_test_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
-    #os.environ["ENV"] ="testing"
+    # os.environ["ENV"] ="testing"
 
 class StagingConfig(Config):
     """Configurations for Staging."""

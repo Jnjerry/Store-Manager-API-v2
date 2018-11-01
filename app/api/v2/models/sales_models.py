@@ -13,15 +13,17 @@ class Sale():
 		self.date_created = date_created
 
 	@staticmethod
-	def create_sales(data):
-		query = "INSERT INTO sales (product_id,quantity,remains,price,name,date_created)" \
-				"VALUES('%s','%s', '%s','%s','%s', now())"% (
-				data['product_id'],data['quantity'],3,4,5)
-		con=db_connect()
-		cur=con.cursor()
-		cur.execute(query)
-		con.commit()
-		return query
+	def create_sales(self):
+		sale={"product_id":self.product_id, "quantity":self.quantity, "remains":self.remains,"price":self.price,"name":self.name,"date_created":self.date_created}
+		try:
+			con=db_connect()
+			cur= con.cursor()
+			data = cur.execute("INSERT INTO sales(product_id, quantity, remains, price, name,date_created) VALUES('{}','{}','{}','{}','{}','{}','{}');".format(self.product_id,self.quantity,self.remains,self.price,self.name,self.date_created))
+			print(data)
+			con.commit()
+		except Exception as e:
+			print(e)
+		return sale
 
 
 

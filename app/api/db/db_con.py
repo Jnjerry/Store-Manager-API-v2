@@ -19,7 +19,7 @@ def create_tables():
         cur=con.cursor()
         for query in queries:
             cur.execute(query)
-        print("Tables succssfully created")
+        print("Tables succesfully created")
     except(Exception,psycopg2.DatabaseError) as error:
          print("Connection failed",error)
     finally:
