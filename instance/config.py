@@ -10,13 +10,16 @@ class Config(object):
 class DevelopmentConfig(Config):
     "Configurations for Development Phase"
     DEBUG = True
+    database_url= " dbname='store_manager_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
+    os.environ["ENV"] ="development"
 
 
 class TestingConfig(Config):
     """Configurations for Testing,"""
     TESTING = True
     DEBUG = True
-    DATABASE_URL = os.getenv("DATABASE_TEST_URL")
+    database_url="dbname='store_test_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
+    #os.environ["ENV"] ="testing"
 
 class StagingConfig(Config):
     """Configurations for Staging."""
@@ -34,6 +37,4 @@ app_config = {
     'testing': TestingConfig,
     'staging': StagingConfig,
     'production': ProductionConfig,
-    'database_url':"dbname='store_manager_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
-    'test_url':"dbname='store_test_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'"
 }

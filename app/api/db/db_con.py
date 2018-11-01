@@ -1,11 +1,12 @@
 import psycopg2
 from .queries import queries
-
+from instance.config import app_config
+import os
 """connect to the db and return error if connection fails"""
+enviroment = os.environ['ENV']
 def db_connect():
     try:
-        connection=psycopg2.connect(
-        "dbname='store_manager_api' host='localhost' port='5432' user='postgres' password='m@ngun@1'")
+        connection=psycopg2.connect(app_config[enviroment].database_url)
         return connection
     except(Exception,psycopg2.DatabaseError) as error:
         print("Connection failed",error)
@@ -26,4 +27,3 @@ def create_tables():
         cur=con.cursor()
         cur.close()
         con.commit()
-        
