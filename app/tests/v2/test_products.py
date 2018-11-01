@@ -25,29 +25,58 @@ class ProductsTestCase(unittest.TestCase):
 		return self.client.post('/api/v2/auth/login',headers={'content_type':'application/json'},data=user_data)
 
 
-	def test_get_all_products(self):
-		self.register_user()
-		result = self.login_user()
-		res = self.client.get(
-			'/api/v2/products',
-			headers={"Content-Type":"application/json"}
+	def test_delete_product(self):
+		response = self.client.post('/api/v2/auth/login',data = json.dumps(self.login),
+		content_type = 'application/json'
 		)
-		self.assertEqual(res.status_code, 200)
+		response_data= json.loads(response.data.decode())['access_token']
+
+		response = self.client.delete('/api/v2/products/9',
+		headers=dict(Authorization="Bearer " + access_token)
+		)
+		self.assertEqual(response.status_code, 200)
+
+		# def test_Register_user(self):
+        # response = self.client.post(
+        # '/api/v2/users/login',
+        #  data = json.dumps(dict(
+        #     email='ken@gmail.com',password='12345')),
+        #  content_type = 'application/json')
+        # response_data = json.loads(response.data.decode())
+		#
+        # token = json.loads(response.data.decode())['access_token']
+		#
+        # response = self.client.post('/api/v2/auth/user',
+        # data = json.dumps(self.register_valid_email),
+        # headers=dict(Authorization="Bearer " + token),
+        # content_type = 'application/json')
+        # response_data = json.loads(response.data)
+        # self.assertEqual(response_data["message"],"Enter correct email format")
+        # self.assertEqual(response.status_code, 200)
+		#
+		#
+		# # response = self.client.get('/api/v2/products/1',
+		# headers=dict(Authorization="Bearer " + self.owner_token))
+		# response_data = json.loads(response.data)
+		# self.assertEqual("product not available",response_data["message"])
+		#
+
+
 
 
 	# def test_create_sale(self):
-    #         self.register_user()
-    #         result = self.login_user()
-    #         access_token = json.loads(result.data.decode())['access_token']
+	#         self.register_user()
+	#         result = self.login_user()
+	#         access_token = json.loads(result.data.decode())['access_token']
 	#
 	#
-    #         response = self.client.post('/api/v2/products',
-    #             data=json.dumps(self.product_data),
-    #             headers=dict(Authorization="Bearer " + access_token),
-    #             content_type='application/json'
-    #             )
+	#         response = self.client.post('/api/v2/products',
+	#             data=json.dumps(self.product_data),
+	#             headers=dict(Authorization="Bearer " + access_token),
+	#             content_type='application/json'
+	#             )
 	#
-    #         self.assertEqual(response.status_code, 201)
+	#         self.assertEqual(response.status_code, 201)
 
 
 

@@ -3,6 +3,8 @@ from flask_restful import Resource,reqparse
 from app.api.v2.models.user_models import User
 from app.api.db.db_con import db_connect
 from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_identity, get_raw_jwt)
+from flask_expects_json import expects_json
+from app.api.v2.validators.schemas import user_schema
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', required=True, help="name cannot be blank")
@@ -17,8 +19,8 @@ class UserSignUp(Resource):
 			return {"message":"No users yet"},400
 		return make_response(jsonify(
 			{"message":"All users in the system","users":user,"status":"okay"}),200)
-
-
+	@jwt_required
+	@expects_json(user_schema)
 	def post(self):
 		data = request.get_json()
 		args = parser.parse_args()
@@ -27,6 +29,8 @@ class UserSignUp(Resource):
 		roles = args['roles'].strip()
 		password = args['password'].lower().strip()
 		role=["admin","attendant"]
+		if email=="" or password =="":
+			return {'Message':'Password or email empty'},400
 		if roles not in role:
 			return make_response(jsonify({'message': 'only admin and attendant roles are accepted'}), 400)
 		if User.exists(data):
@@ -53,7 +57,7 @@ class UserLogin(Resource):
 
 		if user_exists:
 			"""create a token after user logs in success"""
-			access_token = create_access_token(args['email'])
-			return make_response(jsonify({'message':'successful login','access-token':access_token}))
+			access_token = create_access_token(identity['email'])
+			return make_response(jsonify({'message':'successful login','access_token':access_token}))
 		else:
 			return make_response(jsonify({'message': 'email does not exist'}), 400)
