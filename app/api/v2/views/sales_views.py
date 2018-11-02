@@ -17,55 +17,32 @@ class Sales(Resource):
             return make_response(jsonify({"message": "No sale record found"}))
         return make_response(jsonify({"sales":sales}),201)
 
-
     def post(self):
         data =request.get_json()
         # sale_id = data['sale_id']
-        product_id  = data['product_id']
+        product_id= data['product_id']
         quantity = data['quantity']
 
 
-        product=Sale.get_product_by_id(product_id)
-        print(product)
+
+        product=Product.get_by_id(product_id)
+        if not product:
+            return {"message": "No product found"},404
 
 
-        if product is None:
-            return {"message":"Product is not available"},404
 
-        price = product[3]
-        remainder=int(product[5]) - int(quantity)
+        remaining_quantity=int(product[5]) - int(quantity)
         total_sale = int(product[4]) * int(quantity)
-        name = product[1]
+        price = product[4]
         date_created = datetime.now()
+        product_id = product[0]
 
 
-        if remainder < 0:
+        if remaining_quantity < 0:
             return {"message": "Not enough in stock"}
 
-        newsale = Sale(product_id,quantity,remainder,price,name,date_created).create_sale()
+        newsale = Sale(product_id,quantity,remaining_quantity,price,date_created).create_sale()
         print(newsale)
-        Sale.decrease_quantity(product_id,remainder)
-
-
+        Sale.decrease_quantity(product_id,remaining_quantity)
         return make_response(jsonify(
-            {"message":"Sale record created successfully"}
-            ), 201)
-        # "status":"created",
-        #     "product":newsale
-
-
-
-class DeleteSale(Resource):
-    def delete(self,sale_id):
-        Sale.delete_product(sale_id)
-        return {"message":"Deleted successfully"}
-
-
-class Get_sale_id(Resource):
-    def get(self,sale_id):
-        sal = [sale for sale in sales if sale['sale_id'] == sale_id] or None
-        if sal:
-            return make_response(jsonify({'sale':sal[0]}),200)
-        else:
-            return jsonify({'message': "specific sale not found"})
-            return 404
+            {"message":"Sale record created successfully"}), 201)

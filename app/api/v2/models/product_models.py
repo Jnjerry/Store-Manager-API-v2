@@ -62,9 +62,4 @@ class Product(object):
 			cur.execute(query)
 			return cur.fetchone()
 
-	@staticmethod
-	def decrease_quantity(product_id, product):
-		con=db_connect()
-		cur= con.cursor()
-		cur.execute("UPDATE products SET quantity = %s WHERE product_id = %s", (product[5],product_id))
-		con.commit()
+	
