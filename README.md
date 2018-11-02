@@ -1,5 +1,5 @@
 # Store-Manager-API
-
+<a href="https://codeclimate.com/github/Jnjerry/Store-Manager-API-v2/maintainability"><img src="https://api.codeclimate.com/v1/badges/4c6150d3b82d44e0b19f/maintainability" /></a>
 Store manager api is a flask api that helps storeowners to manage their products and sales with the help of store attendants
 
 # STORE-MANAGER API
