@@ -38,9 +38,8 @@ class Product(object):
 			con=db_connect()
 			cur=con.cursor()
 			cur.execute(query)
-			return cur.fetchone()
-
-
+			product=cur.fetchone()
+			return product
 
 	@staticmethod
 	def update(data,product_id):
@@ -64,7 +63,8 @@ class Product(object):
 			return cur.fetchone()
 
 	@staticmethod
-	def quantity_decrease(product_id,product):
-		query="UPDATE products SET quantity='%s' WHERE product_id='%s' " %(
-		product[5],product_id)
-		return query
+	def decrease_quantity(product_id, product):
+		con=db_connect()
+		cur= con.cursor()
+		cur.execute("UPDATE products SET quantity = %s WHERE product_id = %s", (product[5],product_id))
+		con.commit()

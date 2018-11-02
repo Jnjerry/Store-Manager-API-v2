@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token,get_jwt_identity
 from functools import wraps
 from flask import abort
 import datetime
-
+import re
 class User(object):
 
 	def __init__(self, email, password, roles):
@@ -53,3 +53,8 @@ class User(object):
 	@staticmethod
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
+
+	def validate_email(self,email):
+		if re.match("\A(?P<name>[\w\-_]+)@(?P<domain>[\w\-_]+).(?P<toplevel>[\w]+)\Z",email,re.IGNORECASE):
+			return True
+		return False

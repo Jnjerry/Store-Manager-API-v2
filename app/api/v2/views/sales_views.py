@@ -6,73 +6,68 @@ from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_ident
 
 from app.api.v2.models.sales_models import Sale
 from app.api.v2.models.product_models import Product
-prod_obj = Product()
-sales_obj = Sale()
 
-
-
-parser = reqparse.RequestParser()
-parser.add_argument('product_id', required=True, help="Id cannot be blank")
-parser.add_argument('quantity', type=int, required=True, help="Only integers allowed")
-
-class Sales(Resource):
-	"""All products class"""
-
-
-	def post(self):
-		"""posts a single product"""
-		data=request.get_json()
-		args = parser.parse_args()
-		product_id = args['product_id']
-		quantity = args['quantity']
-
-		product =Product.get_by_id(product_id)
-
-
-		if product is None:
-			return {"message": "Product is unavailable"}, 404
 
 
 
-		remains = int(product[5]) - int(quantity)
-		print(product[5])
-		print(quantity)
-		price = int(product[4]) * int(quantity)
-		name = product[1]
-		date_created = datetime.now()
-		new_sale = Sale(product_id, quantity, remains, price, name, date_created)
+class Sales(Resource):
+    def get(self):
+        sales = Sale.get_sales(self)
+        if not sales:
+            return make_response(jsonify({"message": "No sale record found"}))
+        return make_response(jsonify({"sales":sales}),201)
 
-		updated_product_list=list(product)
-		updated_product_list[5]= remains
 
-		Product.quantity_decrease(product_id, product)
-		new_sale.create_sales(data)
+    def post(self):
+        data =request.get_json()
+        # sale_id = data['sale_id']
+        product_id  = data['product_id']
+        quantity = data['quantity']
+        attendant=data['attendant']
 
-		return make_response(jsonify(
-			{"message":"Sale created",
-			"product":new_sale.__dict__}
-			), 201)
 
-	def get(self):
-		"""gets all products"""
-		sales = get_sales()
-		if sales is None:
-			return make_response(jsonify(
-				{
-				"message": "No sales available"
-				}))
-		return make_response(jsonify(
-			{
-			"message":"success",
-			"status":"ok",
-			"Sales":sales}), 200)
 
-class SingleSale(Resource):
-	'''class represents operations for one sale record'''
-	def get(self, id):
-		# email = get_jwt_identity()
-		# user = get_user(email)
-		sale_record = get_sale(id)
-		if sale_record is None:
-			return make_response(jsonify({"message": "Sale record unavailable"}), 404)
-		return make_response(jsonify({"message": "success", "Sale": sale_record}), 200)
+        product=Sale.get_product_by_id(product_id)
+        print(product)
+
+
+        if product is None:
+            return {"message":"Product is not available"},404
+
+        price = product[3]
+        remaining_q=int(product[5]) - int(quantity)
+        total_sale = int(product[4]) * int(quantity)
+        name = product[1]
+        date_created = datetime.now()
+
+
+        if remaining_q < 0:
+            return {"message": "Not enough in stock"}
+
+        newsale = Sale(product_id,quantity,remaining_q,price,name,attendant,date_created).create_sale()
+        print(newsale)
+        Sale.decrease_quantity(product_id,remaining_q)
+
+
+        return make_response(jsonify(
+            {"message":"Sale record created successfully"}
+            ), 201)
+        # "status":"created",
+        #     "product":newsale
+
+
+
+class DeleteSale(Resource):
+    def delete(self,sale_id):
+        Sale.delete_product(sale_id)
+        return {"message":"Deleted successfully"}
+
+
+class Get_sale_id(Resource):
+    def get(self,sale_id):
+        sal = [sale for sale in sales if sale['sale_id'] == sale_id] or None
+        if sal:
+            return make_response(jsonify({'sale':sal[0]}),200)
+        else:
+            return jsonify({'message': "specific sale not found"})
+            return 404

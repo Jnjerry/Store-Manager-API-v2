@@ -8,8 +8,8 @@ class AuthTestCase(unittest.TestCase):
 	# method will run before each test case method
 	def setUp(self):
 		self.client= create_app('testing').test_client()
-		self.user = {'name':'njerr','email':'njer@gmail.com', 'roles':'admin', 'password':'dsaf'}
-		# self.new_user = {'email': 'alias@gmail.com', 'name':'alias', 'password': '1881','roles'='admin'}
+		self.user = {'name':'joan','email':'ngugijoa@gmail.com', 'roles':'admin', 'password':'jj'}
+		self.user_empty = {'name':'joan','email':'joan@gmail.com', 'roles':'admin', 'password':''}
 
 	def register_user(self,name='',email='',roles='',password=''):
 		user_data = self.user
@@ -19,41 +19,57 @@ class AuthTestCase(unittest.TestCase):
 		user_data = self.user
 		return self.client.post('/api/v2/auth/login', data=user_data)
 
-	def test_registration(self):
-		self.register_user()
-		result = self.login_user()
-		response = self.client.post('/api/v2/auth/register',
-				data=json.dumps(self.user),
-				content_type='application/json')
-
-		self.assertEqual(response.status_code, 201)
 
 
 	def test_user_login(self):
-		res = self.client.post('/api/v2/auth/register', data=self.user)
-		self.assertEqual(res.status_code, 201)
-		login_res = self.client().post('/auth/login', data=self.user_data)
+		response = self.client.post('/api/v2/auth/login',data=json.dumps(self.user),
+		content_type='application/json')
+		self.assertEqual(response.status_code, 200)
 
-		# get the results in json format
-		result = json.loads(login_res.data.decode())
-		# Assert that the status code is equal to 200
-		self.assertEqual(login_res.status_code, 200)
-		self.assert()
-		self.assertTrue(result['access_token'])
+	def test_empty_password(self):
+		response = self.client.post('/api/v2/auth/login',data=json.dumps(self.user_empty),
+		content_type='application/json')
+		self.assertEqual(response.status_code, 200)
 
-
-	# def test_user_login(self):
-	# 	user_data = self.user
-	# 	res = self.client.post('/api/v2/auth/register', data=user_data)
-	# 	self.assertEqual(res.status_code, 201)
-	# 	login_res = self.client.post('/api/v2/auth/login', data=self.user_data)
+	# def test_Register_user(self):
+    #     response = self.client.post('/api/v2/users/login',
+    #      data = json.dumps(self.user),
+    #      content_type = 'application/json')
+    #     response_data = json.loads(response.data.decode())
 	#
-	# 	# get the results in json format
-	# 	result = json.loads(login_res.data.decode())
-	# 	# Test that the response contains success message
-	# 	# Assert that the status code is equal to 200
-	# 	self.assertEqual(login_res.status_code, 200)
-	# 	self.assertTrue(result['access_token'])
+    #     token = json.loads(response.data.decode())['access_token']
+	#
+    #     response = self.client.post('/api/v2/auth/user',
+    #     data = json.dumps(self.register_valid_email),
+    #     headers=dict(Authorization="Bearer " + token),
+    #     content_type = 'application/json')
+    #     response_data = json.loads(response.data)
+    #     self.assertEqual(response_data["message"],"Enter correct email format")
+    #     self.assertEqual(response.status_code, 200)
+#
+	# def test_registration(self):
+	# 	"""Test user registration works correcty."""
+	# 	res = self.client.post('/auth/v2/register', data=self.user_data)
+	# 	# get the results returned in json format
+	# 	result = json.loads(res.data.decode())
+	# 	# assert that the request contains a success message and a 201 status code
+	# 	self.assertEqual(result['message'], "You registered successfully.")
+	# 	self.assertEqual(res.status_code, 201)
+	#
+	# def test_register_user(self):
+    #         self.register_user()
+    #         result = self.login_user()
+    #         access_token = json.loads(result.data.decode())['token']
+	#
+    #         response = self.client.post('/api/v2/auth/register',data=self.user,
+    #             headers=dict(Authorization="Bearer " + access_token))
+	#
+    #         self.assertEqual(response.status_code, 201)
+
+
+
+
+
 	# def test_non_registered_user_login(self):
 	# 	"""Test non registered users cannot login."""
 	# 	# define a dictionary to represent an unregistered user
