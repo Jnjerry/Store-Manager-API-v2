@@ -23,8 +23,6 @@ class Sales(Resource):
         # sale_id = data['sale_id']
         product_id  = data['product_id']
         quantity = data['quantity']
-        attendant=data['attendant']
-
 
 
         product=Sale.get_product_by_id(product_id)
@@ -35,18 +33,18 @@ class Sales(Resource):
             return {"message":"Product is not available"},404
 
         price = product[3]
-        remaining_q=int(product[5]) - int(quantity)
+        remainder=int(product[5]) - int(quantity)
         total_sale = int(product[4]) * int(quantity)
         name = product[1]
         date_created = datetime.now()
 
 
-        if remaining_q < 0:
+        if remainder < 0:
             return {"message": "Not enough in stock"}
 
-        newsale = Sale(product_id,quantity,remaining_q,price,name,attendant,date_created).create_sale()
+        newsale = Sale(product_id,quantity,remainder,price,name,date_created).create_sale()
         print(newsale)
-        Sale.decrease_quantity(product_id,remaining_q)
+        Sale.decrease_quantity(product_id,remainder)
 
 
         return make_response(jsonify(

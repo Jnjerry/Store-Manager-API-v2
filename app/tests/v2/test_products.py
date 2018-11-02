@@ -59,6 +59,7 @@ class ProductsTestCase(unittest.TestCase):
 			response = self.client.post(
 			'/api/v2/auth/login',
 			data = json.dumps(self.login_user),
+
 			content_type = 'application/json'
 			)
 			token = json.loads(response.data.decode())['access_token']
@@ -72,16 +73,23 @@ class ProductsTestCase(unittest.TestCase):
 			response_data = json.loads(response.data)
 			self.assertEqual(response.status_code, 201)
 
-		def test_delete_product(self):
-			response = self.client.post(
-			'/api/v2/auth/login',
-			data = json.dumps(self.login_user),
-			content_type = 'application/json'
-			)
-			token = json.loads(response.data.decode())['access_token']
+		# def test_delete_product(self):
+		# 	response = self.client.post(
+		# 	'/api/v2/auth/login',
+		# 	data = json.dumps(self.login_user),
+		# 	content_type = 'application/json'
+		# 	)
+		# 	token = json.loads(response.data.decode())['access_token']
+		#
+		# 	response = self.client.delete(
+		# 	'/api/v2/products/8',
+		# 	headers=dict(Authorization="Bearer " + token)
+		# 	)
+		# 	self.assertEqual(response.status_code, 200)
 
-			response = self.client.delete(
-			'/api/v2/products/8',
-			headers=dict(Authorization="Bearer " + token)
-			)
-			self.assertEqual(response.status_code, 200)
+		def test_product_list(self):
+			response = self.client.post('/api/v2/auth/login',data = json.dumps(self.login_user),
+			content_type = 'application/json')
+
+			response=self.client.get('api/v2/products',content_type="application/json")
+			self.assertEqual(response.status_code,200)
