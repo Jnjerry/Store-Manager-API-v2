@@ -8,9 +8,6 @@ from flask_expects_json import expects_json
 
 parser = reqparse.RequestParser()
 
-parser.add_argument('email', required=True, help="email cannot be blank")
-
-parser.add_argument('password', required=True, help="password cannot be blank")
 
 class UserSignUp(Resource):
 	def get(self):
@@ -53,6 +50,10 @@ class UserSignUp(Resource):
 			return make_response(jsonify({'message': 'user created successfully'}), 201)
 
 class UserLogin(Resource):
+	parser.add_argument('email', required=True, help="email cannot be blank")
+
+	parser.add_argument('password', required=True, help="password cannot be blank")
+
 	def post(self):
 		data = request.get_json()
 		args = parser.parse_args()

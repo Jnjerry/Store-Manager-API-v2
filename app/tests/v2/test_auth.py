@@ -19,5 +19,3 @@ class ProductsTestCase(unittest.TestCase):
 		def login_user(self, email="", password=""):
 			user_data =self.user
 			return self.client.post('/api/v2/auth/login', data=user_data)
-
-		
