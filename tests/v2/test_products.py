@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from ... import create_app
+from app import create_app
 
 
 class ProductsTestCase(unittest.TestCase):
@@ -76,12 +76,7 @@ class ProductsTestCase(unittest.TestCase):
 
 			response=self.client.get('api/v2/products',content_type="application/json")
 			self.assertEqual(response.status_code,200)
-		# def test_product_missing(self):
-		# 	response = self.client.post('/api/v2/auth/login',data = json.dumps(self.missing_data),
-		# 	content_type = 'application/json')
-		#
-		# 	response=self.client.get('api/v2/products',content_type="application/json")
-		# 	self.assertEqual(response.status_code,200)
+
 
 		def test_invalid_product_id(self):
 			response = self.client.post('/api/v2/auth/login',data = json.dumps(self.login_user),

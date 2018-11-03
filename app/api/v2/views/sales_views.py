@@ -13,7 +13,7 @@ from app.api.v2.models.product_models import Product
 class Sales(Resource):
 
     @jwt_required
-    @attendant_required
+    @admin_required
     def get(self):
         sales = Sale.get_sales(self)
         if not sales:
