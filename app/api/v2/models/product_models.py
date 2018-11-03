@@ -62,4 +62,11 @@ class Product(object):
 			cur.execute(query)
 			return cur.fetchone()
 
-	
+	@staticmethod
+	def product_exists_name(name):
+			query="SELECT * FROM products WHERE name = '%s';" % name
+
+			con = db_connect()
+			cur = con.cursor()
+			cur.execute(query)
+			return cur.fetchone()

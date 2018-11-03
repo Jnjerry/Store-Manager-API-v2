@@ -33,6 +33,7 @@ class Product_List(Resource):
 			description = args['description'].strip()
 			price = args['price']
 			quantity = args['quantity']
+			product_exists=Product.product_exists_name(name)
 
 			if name=="":
 				return {'Message':'name cannot be empty'},400
@@ -44,6 +45,8 @@ class Product_List(Resource):
 				return {'Message':'Price cannot be empty'},400
 			if quantity=="":
 				return {'Message':'quantity cannot be empty'},400
+			if product_exists:
+				return {'Message':'product already exists'}
 
 			if quantity<0:
 				return {'message': 'quantity cannot be 0'}, 400
