@@ -1,16 +1,23 @@
 language: python
 
-python:
-  - "3.6.1"
+python:    
+ - "3.6.1"
+ 
+services:
+  - postgres
 
-
-install:
-  - pip install -r requirements.txt
-  - pip install coveralls
-
-script:
-  - pytest
-  - coverage run --source=app.api.v2 -m pytest && coverage report
-
+install:    
+ - pip install -r requirements.txt
+ - pip install codeclimate-test-reporter
+ 
+before_script:
+  - psql -c "create database store_manager_api;" -U postgres
+  - psql -c "create user postgres;" -U postgres
+script:    
+ 
+ -  python -m pytest --cov=app
+ - coveralls
+ 
 after_success:
-  - coveralls  
+ - coveralls
+ - codeclimate-test-reporter
