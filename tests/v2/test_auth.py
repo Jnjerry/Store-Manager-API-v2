@@ -2,7 +2,7 @@
 import unittest
 import json
 import os
-from ... import create_app
+from import create_app
 
 
 class ProductsTestCase(unittest.TestCase):
