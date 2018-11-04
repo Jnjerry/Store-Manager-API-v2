@@ -5,7 +5,7 @@ import os
 from app import create_app
 
 
-class ProductsTestCase(unittest.TestCase):
+class UserTestCase(unittest.TestCase):
 		def setUp(self):
 			self.client= create_app('testing').test_client()
 			self.product_data = {"product_id":5, "name":"Purple Hibiscus","category":"Africanah", "description": "Written by Chimamanda","price":1500,"quantity":20}
@@ -49,3 +49,5 @@ class ProductsTestCase(unittest.TestCase):
 			self.assertEqual(result['message'],
 				"email does not exist")
 			self.assertEqual(response.status_code, 400)
+if __name__ == '__main__':
+    unittest.main()

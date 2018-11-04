@@ -21,8 +21,8 @@ class Sales(Resource):
         return make_response(jsonify({"sales":sales}),201)
 
 
-    # @jwt_required
-    # @attendant_required
+    @jwt_required
+    @attendant_required
     def post(self):
         data =request.get_json()
         # sale_id = data['sale_id']
