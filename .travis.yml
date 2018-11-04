@@ -9,7 +9,7 @@ install:
 services:
  - postgresql
 before_script:
-- psql -c 'create database store_test_api;' -U postgres
+- psql -c 'create database store_manager_api;' -U postgres
 
 
 script:
