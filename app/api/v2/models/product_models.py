@@ -1,20 +1,29 @@
 from app.api.db.db_con import db_connect
 import json
-import functools
+
+con=db_connect()
+cur=con.cursor()
+
 class Product(object):
+	def __init__(self, name="", category="", description="", quantity="", price=""):
+		self.name = name
+		self.category = category
+		self.description=description
+		self.quantity = quantity
+		self.price = price
+
 	@staticmethod
-	def create_products(data):
-		query = "INSERT INTO products (name,category,description,quantity,price)" \
-				"VALUES('%s','%s', '%s','%s','%s')"% (
-					data['name'],data['category'],data['description'],data['quantity'],data['price'])
-		return query
+	def create_products(newproduct):
+		cur.execute("""INSERT INTO products(name, category, description,quantity,price)
+					VALUES('%s', '%s','%s','%s','%s');"""%(
+		newproduct.name,newproduct.category,newproduct.description,newproduct.quantity,newproduct.price))
+		con.commit()
 
 
 	@staticmethod
 	def get_all(self):
 		query="SELECT * FROM products"
-		con=db_connect()
-		cur=con.cursor()
+
 		cur.execute(query)
 		all_products=cur.fetchall()
 		if all_products:
@@ -23,9 +32,10 @@ class Product(object):
 				my_item={
 					'product_id':item[0],
 					'name':item[1],
-					'category':item[2],
-					'description':item[3],
-					'quantity':item[4],
+					'quantity':item[2],
+					'category':item[3],
+					'description':item[4],
+
 					'price':item[5],
 
 				}
@@ -34,32 +44,54 @@ class Product(object):
 
 	@staticmethod
 	def get_by_id(product_id):
+			query="SELECT * FROM products WHERE product_id = '%s';" % product_id
+			cur.execute(query)
+			single_prod= cur.fetchall()
+			if single_prod:
+				single_prod = []
+				for item in single_prod:
+					items ={
+					'product_id':item[0],
+					'name':item[1],
+					'quantity':item[2],
+					'category':item[3],
+					'description':item[4],
+					'price':item[5],
+					}
+					single_prod.append(items)
+				return single_prod
+
+
+
+
+	def update(product_id, product):
+		cur.execute("UPDATE products SET name = %s, quantity = %s, category = %s, description = %s, price = %s WHERE product_id = %s", (
+		product['name'],product['quantity'],product['category'],product['description'],product['price'],product_id))
+		con.commit()
+
+	@staticmethod
+	def get_product_by_id(product_id):
 			query = "SELECT * FROM products WHERE product_id = '%s';" % product_id
-			con=db_connect()
-			cur=con.cursor()
 			cur.execute(query)
 			product=cur.fetchone()
 			return product
 
-	@staticmethod
-	def update(data,product_id):
-		query="UPDATE products SET name='%s',category='%s',description='%s',quantity='%s',price='%s' WHERE product_id='%s' " %(
-		data['name'], data['category'],json.dumps(data['description']),data['quantity'],data['price'],product_id)
-		return query
+
 
 	@staticmethod
 	def delete_by_id(product_id):
-			query = "DELETE  FROM products WHERE product_id = '%s';" % product_id
-			return query
+		query = "DELETE  FROM products WHERE product_id = '%s';" % product_id
+		return query
 
 
 	@staticmethod
 	def product_exists(product_id):
-			query="SELECT * FROM products WHERE product_id = '%s';" % product_id
+		query="SELECT * FROM products WHERE product_id = '%s';" % product_id
+		cur.execute(query)
+		return cur.fetchone()
 
-			con = db_connect()
-			cur = con.cursor()
+	@staticmethod
+	def product_exists_name(name):
+			query="SELECT * FROM products WHERE name = '%s';" % name
 			cur.execute(query)
 			return cur.fetchone()
-
-	

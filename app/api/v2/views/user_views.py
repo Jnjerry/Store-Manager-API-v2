@@ -65,6 +65,6 @@ class UserLogin(Resource):
 		if user_exists:
 			"""create a token after user logs in success"""
 			access_token = create_access_token(args['email'])
-			return make_response(jsonify({'message':'successful login','access_token':access_token}))
+			return make_response(jsonify({'message':'successful login','access_token':access_token}),201)
 		else:
 			return make_response(jsonify({'message': 'email does not exist'}), 400)

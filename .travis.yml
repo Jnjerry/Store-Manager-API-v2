@@ -1,23 +1,23 @@
 language: python
-
-python:    
+python:
  - "3.6.1"
- 
-services:
-  - postgres
-
-install:    
+cache: pip
+install:
  - pip install -r requirements.txt
+ - pip install coveralls
  - pip install codeclimate-test-reporter
- 
+services:
+ - postgresql
 before_script:
-  - psql -c "create database store_manager_api;" -U postgres
-  - psql -c "create user postgres;" -U postgres
-script:    
- 
+ - psql -c 'create database test_store_manager;' -U postgres
+ - psql -c "ALTER USER postgres WITH PASSWORD 'm@ngun@1';" -U postgres
+
+env:
+
+ - database_url="dbname='test_store_manager' user='postgres' host='localhost' password='m@ngun@1'"
+script:
  -  python -m pytest --cov=app
  - coveralls
- 
 after_success:
  - coveralls
  - codeclimate-test-reporter

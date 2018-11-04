@@ -24,7 +24,7 @@ class Product_List(Resource):
 				{"message":"All products in the system","product":product,"status":"okay"}),200)
 
 		@jwt_required
-		@admin_required
+		@attendant_required
 		def post(self):
 			data = request.get_json()
 			args = parser.parse_args()
@@ -33,6 +33,7 @@ class Product_List(Resource):
 			description = args['description'].strip()
 			price = args['price']
 			quantity = args['quantity']
+			product_exists=Product.product_exists_name(name)
 
 			if name=="":
 				return {'Message':'name cannot be empty'},400
@@ -44,27 +45,23 @@ class Product_List(Resource):
 				return {'Message':'Price cannot be empty'},400
 			if quantity=="":
 				return {'Message':'quantity cannot be empty'},400
+			if product_exists:
+				return {'Message':'product already exists'}
 
 			if quantity<0:
 				return {'message': 'quantity cannot be 0'}, 400
 			else:
-				query=Product.create_products(data)
-				con = db_connect()
-				cur = con.cursor()
-				cur.execute(query)
-				cur.close()
-				con.commit()
-
-				return make_response(jsonify({'message': 'product created successfully'}), 201)
+				newproduct = Product(name, category, description,quantity,price)
+				newproduct.create_products(newproduct)
+				return make_response(jsonify({'message': 'product created successfully','product':newproduct.__dict__}), 201)
 
 
 
 class Products(Resource):
-
-		"""get product by id"""
-		def get(self, product_id=None):
+		"get product by id"
+		def get(self, product_id):
 				product=Product.get_by_id(product_id)
-				if not product :
+				if not product:
 					return make_response(jsonify({'error': 'product not found'}), 404)
 				else:
 					return make_response(jsonify({'product': product}), 200)
@@ -80,19 +77,16 @@ class Products(Resource):
 			description = args['description'].strip()
 			price = args['price']
 			quantity = args['quantity']
+			product=Product.get_product_by_id(product_id)
 
 			if quantity<0:
 				return {'message': 'quantity cannot be 0'}, 400
 			else:
 
-				query=Product.update(data,product_id)
-				con = db_connect()
-				cur = con.cursor()
-				cur.execute(query)
-				cur.close()
-				con.commit()
 
-				return make_response(jsonify({'message': 'product updated successfully'}), 201)
+				Product.update(product_id,product)
+				print(Product.update(product_id,product))
+				return make_response(jsonify({'message': 'product updated successfully','product':product.__dict__}), 201)
 		@jwt_required
 		@admin_required
 		def delete(self,product_id=None):

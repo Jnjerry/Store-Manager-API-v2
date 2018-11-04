@@ -1,8 +1,11 @@
+
 query1 = """CREATE TABLE IF NOT EXISTS products (
         product_id serial PRIMARY KEY,
         name varchar(20) NOT NULL,
         quantity integer NOT NULL,
+        category varchar(20) NOT NULL,
         description varchar(70) NOT NULL,
+        price integer NOT NULL,
         date_created timestamp with time zone DEFAULT ('now'::text)::date NOT NULL);
         """
 
