@@ -44,24 +44,26 @@ class Product(object):
 
 	@staticmethod
 	def get_by_id(product_id):
-			query = "SELECT * FROM products WHERE product_id = '%s';" % product_id
+			query="SELECT * FROM products WHERE product_id = '%s';" % product_id
 			cur.execute(query)
-			product=cur.fetchall()
-			if product:
-				prod_id=[]
-				for item in product:
-					my_item={
-						'product_id':item[0],
-						'name':item[1],
-						'quantity':item[2],
-						'category':item[3],
-						'description':item[4],
-
-						'price':item[5],
-
+			single_prod= cur.fetchall()
+			if single_prod:
+				single_prod = []
+				for item in single_prod:
+					items ={
+					'product_id':item[0],
+					'name':item[1],
+					'quantity':item[2],
+					'category':item[3],
+					'description':item[4],
+					'price':item[5],
 					}
-					prod_id.append(my_item)
-			return prod_id
+					single_prod.append(items)
+				return single_prod
+
+
+
+
 	def update(product_id, product):
 		cur.execute("UPDATE products SET name = %s, quantity = %s, category = %s, description = %s, price = %s WHERE product_id = %s", (
 		product['name'],product['quantity'],product['category'],product['description'],product['price'],product_id))
