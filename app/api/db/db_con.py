@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import psycopg2
 from .queries import queries
 from instance.config import app_config
