@@ -7,11 +7,11 @@ from app import create_app
 class ProductsTestCase(unittest.TestCase):
 		def setUp(self):
 			self.client= create_app('testing').test_client()
-			self.product_data = {"product_id":90, "name":"American-00","category":"African", "description": "Written by joan","price":20,"quantity":1500}
+			self.product_data = {"name":"American-003","category":"African", "description": "Written by njerry","price":20,"quantity":1500}
 			self.missing_data = {"product_id":"", "name":"","category":"Africanah", "description": "Written by Chimamanda","price":20,"quantity":1500}
 			self.register_user_admin= {'email': 'john@gmail.com', 'name': 'joan', 'password': 'jojo','roles':'admin'}
 			self.register_user_attendant= {'email': 'jagi@gmail.com', 'name': 'joan', 'password': 'jojo','roles':'attendant'}
-			self.login_user_admin={'email': 'john@gmail.com','password': 'joj0o'}
+			self.login_user_admin={'email': 'john@gmail.com','password': 'jojo'}
 			self.login_user_attendant={'email': 'jagi@gmail.com','password': 'jojo'}
 
 		def register_user(self,email="", password="",roles="",name=""):
@@ -22,7 +22,29 @@ class ProductsTestCase(unittest.TestCase):
 			user_data =self.user
 			return self.client.post('/api/v2/auth/login', data=user_data)
 
-		
+		def test_create_product(self):
+			response = self.client.post('/api/v2/auth/login',
+			data = json.dumps(self.login_user_admin),content_type = 'application/json')
+
+			token = json.loads(response.data.decode())['access_token']
+
+			response = self.client.post('/api/v2/products',data = json.dumps(self.product_data),
+			headers=dict(Authorization="Bearer " + token),
+			content_type = 'application/json')
+			response_data = json.loads(response.data)
+			self.assertEqual(response.status_code, 201)
+
+		def test_modify_product(self):
+			response = self.client.post('/api/v2/auth/login',
+			data = json.dumps(self.login_user_admin),content_type = 'application/json')
+			token = json.loads(response.data.decode())['access_token']
+
+			response = self.client.put('/api/v2/products/2',
+			headers=dict(Authorization="Bearer " + token),data = json.dumps(self.product_data),
+			content_type = 'application/json')
+
+			response_data = json.loads(response.data)
+			self.assertEqual(response.status_code, 201)
 
 
 		def test_product_empty(self):
