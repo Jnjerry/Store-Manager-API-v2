@@ -3,6 +3,8 @@ from flask_jwt_extended import JWTManager
 from app.api.db.db_con import create_tables
 
 
+
+
 def create_app(config_name):
     create_tables()
     app=Flask(__name__)
