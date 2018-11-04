@@ -25,5 +25,25 @@ def create_tables():
     finally:
         con=db_connect()
         cur=con.cursor()
-        cur.close()
         con.commit()
+        cur.close()
+
+
+
+def dropTables():
+
+
+		 query1="""DROP TABLE if EXISTS users CASCADE"""
+		 query2="""DROP TABLE if EXISTS products CASCADE"""
+		 query3="""DROP TABLE if EXISTS sales CASCADE"""
+		 queries = [query1,query2,query3]
+
+		 con=db_connect()
+         cur=con.cursor()
+
+		 for query in queries:
+
+			 cur.execute(query)
+		 con.commit()
+		 cur.close()
+		
