@@ -14,3 +14,5 @@ def create_app(config_name):
     from .api.v2 import version2 as v2
     app.register_blueprint(v2)
     return app
+
+
